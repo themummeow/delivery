@@ -140,7 +140,7 @@ function sendShipping(){
   data.append('address', address);
   data.append('shipping_info', shipping_info);
 
-  fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', { method:'POST', mode:'no-cors', body:data, keepalive:true })
+  fetch('https://script.google.com/macros/s/AKfycbzI2oFHDsLPcmiXRSQcfWMe2n2jfx7essIQ-Wmt2Tyzm0by4Hu3JRizoWG1Yiw9dN7R/exec', { method:'POST', mode:'no-cors', body:data, keepalive:true })
     .catch(err => console.error('Error:', err))
     .finally(() => {
       // ── เคลียร์ฟอร์ม ──
