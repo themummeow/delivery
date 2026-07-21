@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@the_mum_meow - แจ้งข้อมูลจัดส่งพัสดุ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap');
+* { box-sizing: border-box; }
+body { margin: 0; padding: 20px; background: #f9f5f7; }
+#order-form-container { font-family:'Sarabun',sans-serif; max-width:550px; margin:0 auto; background:#fff; padding:20px; border-radius:15px; box-shadow:0 5px 15px rgba(118,97,91,0.1); border:1px solid #f1dbf0; color:#444; position:relative; }
+input, select, button, textarea { font-family:'Sarabun',sans-serif !important; }
+label { font-weight:600; color:#76615b; font-size:0.9rem; margin-bottom:5px; display:block; margin-top:8px; }
+input, textarea { width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px; font-size:0.95rem; }
+input:focus, textarea:focus { outline:none; border-color:#76615b; }
+textarea { resize:vertical; min-height:80px; }
+.btn-submit { background:#76615b; color:#fff; border:none; padding:15px; border-radius:25px; font-weight:600; cursor:pointer; width:100%; font-size:1rem; margin-top:10px; }
+.btn-submit:hover { background:#5c4e47; }
+.btn-submit:disabled { opacity:0.6; cursor:not-allowed; }
+.info-box { background:#fffcfd; border:1px solid #f1dbf0; padding:15px; border-radius:10px; margin-bottom:15px; color:#76615b; font-size:0.9rem; line-height:1.6; }
+.payment-info { background:#fffcfd; border:2px solid #f1dbf0; padding:20px; border-radius:12px; margin-top:10px; margin-bottom:20px; color:#76615b; line-height:1.8; }
+.payment-info div { margin-bottom:8px; }
+.hint { font-size:0.78rem; color:#aaa; margin-top:-6px; margin-bottom:10px; }
+/* ── SUCCESS OVERLAY ── */
+#success-overlay {
+  display:none;
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:rgba(70,50,55,0.55);
+  z-index:9999;
+  align-items:center; justify-content:center;
+  padding:20px;
+}
+#success-overlay.show { display:flex; }
+.success-card {
+  background:#fff; border-radius:18px; padding:32px 24px; max-width:400px; width:100%;
+  text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  font-family:'Sarabun',sans-serif;
+}
+.success-icon { font-size:3rem; margin-bottom:10px; }
+.success-title { font-size:1.2rem; font-weight:600; color:#76615b; margin-bottom:12px; }
+.success-text { font-size:0.9rem; color:#76615b; line-height:1.7; margin-bottom:20px; }
+.success-line-btn {
+  display:block; background:#06C755; color:#fff; text-decoration:none;
+  padding:14px; border-radius:25px; font-weight:600; margin-bottom:12px;
+}
+.success-line-btn:hover { background:#05a648; }
+.success-close-btn {
+  display:block; background:#f1dbf0; color:#76615b; border:none;
+  padding:12px; border-radius:25px; font-weight:600; width:100%; cursor:pointer; font-size:0.95rem;
+}
+.success-close-btn:hover { background:#e8c8e6; }
+</style>
+</head>
+<body>
+<div id="order-form-container">
+
+  <!-- ── SUCCESS OVERLAY ── -->
+  <div id="success-overlay">
+    <div class="success-card">
+      <div class="success-icon">✅</div>
+      <div class="success-title">ส่งข้อมูลเรียบร้อยแล้ว!</div>
+      <div class="success-text">
+        ❗️ รบกวนแจ้งสลิปการโอนทางไลน์ด้วยนะคะ<br>
+        กดปุ่มด้านล่างเพื่อแอดไลน์และส่งสลิป
+      </div>
+      <a href="https://lin.ee/uCgrQOK" target="_blank" class="success-line-btn">💬 แอดไลน์ / ส่งสลิปที่นี่</a>
+      <button type="button" class="success-close-btn" onclick="closeSuccessOverlay()">ปิดหน้าต่างนี้</button>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div style="text-align:center; margin-bottom:8px;">
+      <img src="https://i.ibb.co/LXgSzL8G/pnglogo.png" alt="@the_mum_meow" style="max-width:160px; border-radius:8px;">
+    </div>
+    <div style="margin-bottom:8px; text-align:center;"><strong>แจ้งข้อมูลจัดส่งพัสดุ</strong></div>
+    <div>กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง เพื่อความรวดเร็วในการจัดส่งสินค้าให้ท่าน</div>
+  </div>
+
+  <label>ที่อยู่อีเมล</label>
+  <input type="email" id="email" placeholder="เช่น example@email.com">
+
+  <label>รหัสออเดอร์</label>
+  <input type="text" id="order_id" placeholder="เช่น ORD-00123">
+
+  <label>แอคเคาท์ทวิตเตอร์ (X)</label>
+  <input type="text" id="twitter" placeholder="@username">
+
+  <label>ยอดโอน (บาท)</label>
+  <input type="number" id="pay_amount" placeholder="เช่น 1000">
+
+  <label>ชื่อ - นามสกุล ผู้รับสินค้า</label>
+  <input type="text" id="full_name" placeholder="เช่น นางสาว ก ข ค">
+
+  <label>เบอร์โทรศัพท์</label>
+  <input type="tel" id="phone" placeholder="เช่น 081-234-5678">
+
+  <label>ที่อยู่ในการจัดส่ง</label>
+  <textarea id="address" placeholder="เช่น 123/45 หมู่บ้าน... ถนน... แขวง/ตำบล... เขต/อำเภอ... จังหวัด... รหัสไปรษณีย์"></textarea>
+  <div class="hint">กรุณากรอกที่อยู่ให้ครบถ้วน เพื่อป้องกันความผิดพลาดในการจัดส่ง</div>
+
+  <div class="payment-info">
+    <div style="font-weight:bold; font-size:1.15rem; margin:10px 0;">🏦 082-0-93601-4</div>
+    <div>ธนาคารกรุงไทย KTB</div>
+    <div>- ชิษณุชา / Chitsanucha</div>
+    <div style="font-weight:bold; margin-top:10px;">📌 รบกวนแจ้งสลิปการโอน 📌</div>
+  </div>
+
+  <button class="btn-submit" onclick="sendShipping()">ส่งข้อมูลจัดส่ง</button>
+</div>
+
+<script>
+function showSuccessOverlay(){
+  document.getElementById('success-overlay').classList.add('show');
+}
+function closeSuccessOverlay(){
+  document.getElementById('success-overlay').classList.remove('show');
+}
+
+function sendShipping(){
+  const btn = document.querySelector('.btn-submit');
+  const email = document.getElementById('email').value.trim();
+  const order_id = document.getElementById('order_id').value.trim();
+  const twitter = document.getElementById('twitter').value.trim();
+  const pay_amount = document.getElementById('pay_amount').value.trim();
+  const full_name = document.getElementById('full_name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const address = document.getElementById('address').value.trim();
+
+  if(!email || !order_id || !twitter || !pay_amount || !full_name || !phone || !address){
+    alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'กำลังส่ง...';
+
+  const shipping_info = full_name + ' / ' + phone + ' / ' + address;
+
+  const data = new URLSearchParams();
+  data.append('email', email);
+  data.append('order_id', order_id);
+  data.append('twitter', twitter);
+  data.append('pay_amount', pay_amount);
+  data.append('full_name', full_name);
+  data.append('phone', phone);
+  data.append('address', address);
+  data.append('shipping_info', shipping_info);
+
+  fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', { method:'POST', mode:'no-cors', body:data, keepalive:true })
+    .catch(err => console.error('Error:', err))
+    .finally(() => {
+      // ── เคลียร์ฟอร์ม ──
+      document.getElementById('email').value = '';
+      document.getElementById('order_id').value = '';
+      document.getElementById('twitter').value = '';
+      document.getElementById('pay_amount').value = '';
+      document.getElementById('full_name').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('address').value = '';
+
+      // ── โชว์หน้าจอส่งสำเร็จในเว็บ ──
+      showSuccessOverlay();
+
+      btn.disabled = false; btn.textContent = 'ส่งข้อมูลจัดส่ง';
+    });
+}
+</script>
+</body>
+</html>
