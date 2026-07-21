@@ -76,9 +76,6 @@ textarea { resize:vertical; min-height:80px; }
     <div>กรุณากรอกข้อมูลให้ครบถ้วนและถูกต้อง เพื่อความรวดเร็วในการจัดส่งสินค้าให้ท่าน</div>
   </div>
 
-  <label>ที่อยู่อีเมล</label>
-  <input type="email" id="email" placeholder="เช่น example@email.com">
-
   <label>รหัสออเดอร์</label>
   <input type="text" id="order_id" placeholder="เช่น ORD-00123">
 
@@ -118,7 +115,6 @@ function closeSuccessOverlay(){
 
 function sendShipping(){
   const btn = document.querySelector('.btn-submit');
-  const email = document.getElementById('email').value.trim();
   const order_id = document.getElementById('order_id').value.trim();
   const twitter = document.getElementById('twitter').value.trim();
   const pay_amount = document.getElementById('pay_amount').value.trim();
@@ -126,7 +122,7 @@ function sendShipping(){
   const phone = document.getElementById('phone').value.trim();
   const address = document.getElementById('address').value.trim();
 
-  if(!email || !order_id || !twitter || !pay_amount || !full_name || !phone || !address){
+  if(!order_id || !twitter || !pay_amount || !full_name || !phone || !address){
     alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
     return;
   }
@@ -136,7 +132,6 @@ function sendShipping(){
   const shipping_info = full_name + ' / ' + phone + ' / ' + address;
 
   const data = new URLSearchParams();
-  data.append('email', email);
   data.append('order_id', order_id);
   data.append('twitter', twitter);
   data.append('pay_amount', pay_amount);
@@ -149,7 +144,6 @@ function sendShipping(){
     .catch(err => console.error('Error:', err))
     .finally(() => {
       // ── เคลียร์ฟอร์ม ──
-      document.getElementById('email').value = '';
       document.getElementById('order_id').value = '';
       document.getElementById('twitter').value = '';
       document.getElementById('pay_amount').value = '';
